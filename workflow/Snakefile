@@ -1,0 +1,91 @@
+# Author: Aaron Yerke (aaronyerke@gmail.com)
+
+
+configfile: "workflow/config/config.yaml"
+
+import os
+import pandas as pd
+from snakemake.utils import min_version
+
+##### set minimum snakemake version #####
+min_version("8.9.0")
+
+# Create constants
+response_cols = ["mpg","good_milage","Respondent sequence number"]
+# input function for rule aggregate, return paths to all files produced by the checkpoint
+def find_test_resp_column_names(wildcards):
+	df_path = rules.create_test_rf_dataset.get(**wildcards).output[1]
+	df = pd.read_csv(df_path, sep=",", header=0)
+	return expand("output/unit_test/tables/1col{respns_column}?rf_test_scores.csv", respns_column=df.columns.values)
+
+rule complete:
+	input:
+		"output/unit_test/tables/rf_test_scores.csv"
+		# "Data/unit_test/mtc_predictor.csv",
+		# "Data/unit_test/mtc_response.csv"
+
+rule create_test_rf_dataset:
+	conda:"env/python_conda_env.yml",
+	output:
+		"Data/unit_test/mtc_predictor.csv",
+		"Data/unit_test/mtc_response.csv"
+	shell:
+		"""
+		echo $PWD
+		mkdir -p output/unit_test
+		Rscript workflow/scripts/data_org/make_rf_test_dfs.R
+		"""
+
+rule aggregate_rf_tables_test_data:
+	conda:"env/python_conda_env.yml"
+	input:expand("output/unit_test/tables/1col{respns_column}?rf_test_scores.csv", respns_column=response_cols)
+	output: "output/unit_test/tables/rf_test_scores.csv"
+	shell:
+		"""
+		echo "{input}"
+		Rscript workflow/scripts/data_org/combine_rf_data.R --out_subdir unit_test --fn_root rf_test
+		"""
+
+rule rf_test_dataset:
+	conda:"env/python_conda_env.yml"
+	input:
+		pred = "Data/unit_test/mtc_predictor.csv",
+		resp = "Data/unit_test/mtc_response.csv"
+	output:
+		"output/unit_test/tables/1col{respns_column}?rf_test_scores.csv"
+	shell:
+		"""
+		echo $PWD
+		mkdir -p output/unit_test
+		python --version
+		python workflow/scripts/ml/rf-resp_df.py \
+				--response_fn {input.resp} \
+				--delimeter , \
+				--pred_path {input.pred} \
+				--out_folder unit_test \
+				--output_label rf_test \
+				--title rf_test \
+				--response_col {wildcards.respns_column:q}
+		"""
+
+# checkpoint create_test_rf_dataset:
+# 	conda:"env/python_conda_env.yml",
+# 	output:
+# 		"Data/unit_test/mtc_predictor.csv",
+# 		"Data/unit_test/mtc_response.csv"
+# 	shell:
+# 		"""
+# 		echo $PWD
+# 		mkdir -p output/unit_test
+# 		Rscript workflow/scripts/data_org/make_rf_test_dfs.R
+# 		"""
+
+# rule aggregate_rf_tables_test_data:
+# 	conda:"env/python_conda_env.yml"
+# 	input:
+# 	output: "output/unit_test/tables/rf_test_scores.csv"
+# 	shell:
+# 		"""
+# 		echo "{input}"
+# 		Rscript workflow/scripts/data_org/combine_rf_data.R --out_subdir unit_test --fn_root rf_test
+#		"""
