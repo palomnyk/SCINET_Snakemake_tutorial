@@ -19,7 +19,7 @@ default-resources:
   - time=120 #num minutes
   - nodes=10
   - ntasks=5
-# conda-prefix: "~/.conda/envs/python_ml_conda"
+# conda-prefix: "~/.conda/envs/snk_mk_conda_env"
 restart-times: 0
 max-jobs-per-second: 10
 max-status-checks-per-second: 1
