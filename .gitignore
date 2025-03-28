@@ -124,9 +124,9 @@ celerybeat.pid
 # Environments
 .env
 .venv
-env/
+# env/
 venv/
-ENV/
+# ENV/
 env.bak/
 venv.bak/
 
@@ -161,6 +161,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# Incase we don't want our data to be made public
 /Data/
+# Incase we don't want our output to be made public
 /output/
 /.snakemake/
