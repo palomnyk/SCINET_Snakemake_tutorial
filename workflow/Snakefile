@@ -25,7 +25,7 @@ rule complete:
 		# "Data/unit_test/mtc_response.csv"
 
 rule create_test_rf_dataset:
-	conda:"env/python_conda_env.yml",
+	conda:"env/snk_mk_conda_env.yml",
 	output:
 		"Data/unit_test/mtc_predictor.csv",
 		"Data/unit_test/mtc_response.csv"
@@ -37,7 +37,7 @@ rule create_test_rf_dataset:
 		"""
 
 rule aggregate_rf_tables_test_data:
-	conda:"env/python_conda_env.yml"
+	conda:"env/snk_mk_conda_env.yml"
 	input:expand("output/unit_test/tables/1col{respns_column}?rf_test_scores.csv", respns_column=response_cols)
 	output: "output/unit_test/tables/rf_test_scores.csv"
 	shell:
@@ -47,7 +47,7 @@ rule aggregate_rf_tables_test_data:
 		"""
 
 rule rf_test_dataset:
-	conda:"env/python_conda_env.yml"
+	conda:"env/snk_mk_conda_env.yml"
 	input:
 		pred = "Data/unit_test/mtc_predictor.csv",
 		resp = "Data/unit_test/mtc_response.csv"
@@ -69,7 +69,7 @@ rule rf_test_dataset:
 		"""
 
 # checkpoint create_test_rf_dataset:
-# 	conda:"env/python_conda_env.yml",
+# 	conda:"env/snk_mk_conda_env.yml",
 # 	output:
 # 		"Data/unit_test/mtc_predictor.csv",
 # 		"Data/unit_test/mtc_response.csv"
@@ -81,7 +81,7 @@ rule rf_test_dataset:
 # 		"""
 
 # rule aggregate_rf_tables_test_data:
-# 	conda:"env/python_conda_env.yml"
+# 	conda:"env/snk_mk_conda_env.yml"
 # 	input:
 # 	output: "output/unit_test/tables/rf_test_scores.csv"
 # 	shell:
