@@ -18,7 +18,7 @@ library("randomForest")
 print("Loaded packages")
 
 #### Establish directory layout and other constants ####
-output_dir <- file.path("Data", "unit_test")
+output_dir <- file.path("data", "unit_test")
 dir.create(output_dir)
 
 #### Loading in data ####
@@ -38,9 +38,9 @@ mpg_df$`Respondent sequence number` <- row.names(mpg_df)
 
 # To run test:
 # python lib/scripts/ml/rf-resp_df.py \
-# 	--response_fn Data/unit_test/mtc_response.csv \
+# 	--response_fn data/unit_test/mtc_response.csv \
 # 	--delimeter , \
-# 	--pred_path Data/unit_test/mtc_predictor.csv \
+# 	--pred_path data/unit_test/mtc_predictor.csv \
 # 	--out_folder unit_test \
 # 	--output_label unit_test_rf \
 # 	--title mtcars

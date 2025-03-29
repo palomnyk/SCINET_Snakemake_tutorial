@@ -162,7 +162,7 @@ cython_debug/
 #.idea/
 
 # Incase we don't want our data to be made public
-/Data/
+/data/
 # Incase we don't want our output to be made public
 /output/
 /.snakemake/

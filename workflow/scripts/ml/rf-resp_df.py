@@ -57,7 +57,7 @@ print("Reading commmandline input with optparse.", flush = True)
 
 parser = argparse.ArgumentParser(description="This script runs a random forest test on various datasets.")
 parser.add_argument("-e", "--pred_path", dest="pred_table", 
-				  default = "Data/unit_test/mtc_predictor.csv",
+				  default = "data/unit_test/mtc_predictor.csv",
                   help="path, relative to cwd, to table with predictor/explanatory/independant vars",
 				  metavar="pred_table")
 parser.add_argument("-o", "--output_label", default="py_rf",
@@ -68,7 +68,7 @@ parser.add_argument("-c", "--response_col", default=False,
 parser.add_argument("-f", "--out_folder", default="unit_test",
                   help="path, sub folder in 'output'.", 
 				  metavar="out_sub")
-parser.add_argument("-r", "--response_fn", default="Data/unit_test/mtc_response.csv",
+parser.add_argument("-r", "--response_fn", default="data/unit_test/mtc_response.csv",
 				  dest="resp_fn",
                   help="Name of file that holds response vars.", metavar="resp_fn")
 parser.add_argument("-l", "--delimiter", default="\t",

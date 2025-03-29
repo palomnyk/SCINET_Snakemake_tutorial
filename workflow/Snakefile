@@ -21,14 +21,14 @@ def find_test_resp_column_names(wildcards):
 rule complete:
 	input:
 		"output/unit_test/tables/rf_test_scores.csv"
-		# "Data/unit_test/mtc_predictor.csv",
-		# "Data/unit_test/mtc_response.csv"
+		# "data/unit_test/mtc_predictor.csv",
+		# "data/unit_test/mtc_response.csv"
 
 rule create_test_rf_dataset:
 	conda:"env/snk_mk_conda_env.yml",
 	output:
-		"Data/unit_test/mtc_predictor.csv",
-		"Data/unit_test/mtc_response.csv"
+		"data/unit_test/mtc_predictor.csv",
+		"data/unit_test/mtc_response.csv"
 	shell:
 		"""
 		echo $PWD
@@ -49,8 +49,8 @@ rule aggregate_rf_tables_test_data:
 rule rf_test_dataset:
 	conda:"env/snk_mk_conda_env.yml"
 	input:
-		pred = "Data/unit_test/mtc_predictor.csv",
-		resp = "Data/unit_test/mtc_response.csv"
+		pred = "data/unit_test/mtc_predictor.csv",
+		resp = "data/unit_test/mtc_response.csv"
 	output:
 		"output/unit_test/tables/1col{respns_column}?rf_test_scores.csv"
 	shell:
@@ -71,8 +71,8 @@ rule rf_test_dataset:
 # checkpoint create_test_rf_dataset:
 # 	conda:"env/snk_mk_conda_env.yml",
 # 	output:
-# 		"Data/unit_test/mtc_predictor.csv",
-# 		"Data/unit_test/mtc_response.csv"
+# 		"data/unit_test/mtc_predictor.csv",
+# 		"data/unit_test/mtc_response.csv"
 # 	shell:
 # 		"""
 # 		echo $PWD
