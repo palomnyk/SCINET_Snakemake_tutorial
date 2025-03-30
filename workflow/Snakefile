@@ -1,6 +1,5 @@
 # Author: Aaron Yerke (aaronyerke@gmail.com)
 
-
 configfile: "workflow/config/config.yaml"
 
 import os
@@ -13,16 +12,9 @@ min_version("8.9.0")
 # Create constants
 response_cols = ["mpg","good_milage","Respondent sequence number"]
 # input function for rule aggregate, return paths to all files produced by the checkpoint
-def find_test_resp_column_names(wildcards):
-	df_path = rules.create_test_rf_dataset.get(**wildcards).output[1]
-	df = pd.read_csv(df_path, sep=",", header=0)
-	return expand("output/unit_test/tables/1col{respns_column}?rf_test_scores.csv", respns_column=df.columns.values)
-
 rule complete:
 	input:
 		"output/unit_test/tables/rf_test_scores.csv"
-		# "data/unit_test/mtc_predictor.csv",
-		# "data/unit_test/mtc_response.csv"
 
 rule create_test_rf_dataset:
 	conda:"env/snk_mk_conda_env.yml",
@@ -31,8 +23,6 @@ rule create_test_rf_dataset:
 		"data/unit_test/mtc_response.csv"
 	shell:
 		"""
-		echo $PWD
-		mkdir -p output/unit_test
 		Rscript workflow/scripts/data_org/make_rf_test_dfs.R
 		"""
 
@@ -55,9 +45,6 @@ rule rf_test_dataset:
 		"output/unit_test/tables/1col{respns_column}?rf_test_scores.csv"
 	shell:
 		"""
-		echo $PWD
-		mkdir -p output/unit_test
-		python --version
 		python workflow/scripts/ml/random_forest.py \
 				--response_fn {input.resp} \
 				--delimeter , \
@@ -67,25 +54,3 @@ rule rf_test_dataset:
 				--title rf_test \
 				--response_col {wildcards.respns_column:q}
 		"""
-
-# checkpoint create_test_rf_dataset:
-# 	conda:"env/snk_mk_conda_env.yml",
-# 	output:
-# 		"data/unit_test/mtc_predictor.csv",
-# 		"data/unit_test/mtc_response.csv"
-# 	shell:
-# 		"""
-# 		echo $PWD
-# 		mkdir -p output/unit_test
-# 		Rscript workflow/scripts/data_org/make_rf_test_dfs.R
-# 		"""
-
-# rule aggregate_rf_tables_test_data:
-# 	conda:"env/snk_mk_conda_env.yml"
-# 	input:
-# 	output: "output/unit_test/tables/rf_test_scores.csv"
-# 	shell:
-# 		"""
-# 		echo "{input}"
-# 		Rscript workflow/scripts/data_org/combine_rf_data.R --out_subdir unit_test --fn_root rf_test
-#		"""
