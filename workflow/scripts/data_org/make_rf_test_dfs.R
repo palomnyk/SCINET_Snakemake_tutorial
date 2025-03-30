@@ -33,8 +33,8 @@ mtc_df <- subset(mtc_df, select = -c(1))
 
 cor_pvs <- apply(mtc_df, MARGIN = 2, function(x){cor(x, mpg_df[,1])^2})
 
-mtc_df$`Respondent sequence number` <- row.names(mtc_df)
-mpg_df$`Respondent sequence number` <- row.names(mpg_df)
+mtc_df$`car_name` <- row.names(mtc_df)
+mpg_df$`car_name` <- row.names(mpg_df)
 
 # To run test:
 # python lib/scripts/ml/random_forest.py \

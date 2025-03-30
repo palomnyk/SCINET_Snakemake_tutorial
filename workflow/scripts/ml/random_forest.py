@@ -77,7 +77,7 @@ parser.add_argument("-l", "--delimiter", default="\t",
 parser.add_argument("-t", "--title", default=False,
                   help="Title for visualizations",
                   metavar="title", dest="title")
-parser.add_argument("-v", "--id_var", default="Respondent sequence number",
+parser.add_argument("-v", "--id_var", default="car_name",
                   help="String, column name of row variables",
                   metavar="id_var", dest="id_var")
 parser.add_argument("-s", "--respons_df_start", default=0, type=int,

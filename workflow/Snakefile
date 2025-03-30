@@ -10,8 +10,8 @@ from snakemake.utils import min_version
 min_version("8.9.0")
 
 # Create constants
-response_cols = ["mpg","good_milage","Respondent sequence number"]
-# input function for rule aggregate, return paths to all files produced by the checkpoint
+response_cols = ["mpg","good_milage","car_name"]
+
 rule complete:
 	input:
 		"output/unit_test/tables/rf_test_scores.csv"
