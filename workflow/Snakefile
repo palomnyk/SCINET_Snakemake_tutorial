@@ -58,7 +58,7 @@ rule rf_test_dataset:
 		echo $PWD
 		mkdir -p output/unit_test
 		python --version
-		python workflow/scripts/ml/rf-resp_df.py \
+		python workflow/scripts/ml/random_forest.py \
 				--response_fn {input.resp} \
 				--delimeter , \
 				--pred_path {input.pred} \

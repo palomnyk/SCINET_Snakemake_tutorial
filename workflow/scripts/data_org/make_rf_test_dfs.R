@@ -37,7 +37,7 @@ mtc_df$`Respondent sequence number` <- row.names(mtc_df)
 mpg_df$`Respondent sequence number` <- row.names(mpg_df)
 
 # To run test:
-# python lib/scripts/ml/rf-resp_df.py \
+# python lib/scripts/ml/random_forest.py \
 # 	--response_fn data/unit_test/mtc_response.csv \
 # 	--delimeter , \
 # 	--pred_path data/unit_test/mtc_predictor.csv \
