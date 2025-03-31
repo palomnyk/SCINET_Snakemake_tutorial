@@ -36,7 +36,7 @@ print(opt)
 
 #### Establish directory layout and other constants ####
 output_dir <- file.path("output", opt$out_subdir)
-id_var <- "Respondent sequence number"
+id_var <- "car_name"
 dataset_name <- FALSE
 #### Loading in data ####
 

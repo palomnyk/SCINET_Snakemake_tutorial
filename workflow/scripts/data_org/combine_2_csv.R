@@ -21,16 +21,16 @@ source(file.path("lib", "scripts","data_org", "data_org_func.R"))
 #### Parse command line arguments ####
 option_list <- list(
   optparse::make_option(c("-f", "--first_path"), type="character",
-                        default = "Data/diet/d1_nutri_food_2015.csv",
+                        default = "data/diet/d1_nutri_food_2015.csv",
                         help="path of first csv"),
   optparse::make_option(c("-s", "--secnd_path"), type="character",
-                        default = "Data/demo/helper_features_2009-2020.csv",
+                        default = "data/demo/helper_features_2009-2020.csv",
                         help="Path of second csv."),
   optparse::make_option(c("-o", "--out_path"), type="character",
                         default = "helper_d1_nutri_food_2015.csv",
                         help="Path of output csv."),
   optparse::make_option(c("-i", "--id_var"), type="character",
-                        default="Respondent sequence number",
+                        default="car_name",
                         help="Path of second csv.")
 );
 opt_parser <- optparse::OptionParser(option_list=option_list);
