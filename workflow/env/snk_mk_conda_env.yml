@@ -1,8 +1,9 @@
 #adapted from https://github.com/binder-project/example-conda-environment
 #To run:
-#  conda env create --file snk_mk_conda_env.yml
+#  conda env create --file workflow/env/snk_mk_conda_env.yml
 # To activate this environment:
 #  conda activate snk_mk_conda_env
+#  on ceres: source activate snk_mk_conda_env
 # To deactivate an active environment, use
 #  conda deactivate    
 name: snk_mk_conda_env
@@ -24,7 +25,6 @@ dependencies:
   - r-base=4.3
   - r-ggplot2
   - r-BiocManager
-  - r-nhanesA
   - r-readxl
   - r-fastDummies
 
