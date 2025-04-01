@@ -25,7 +25,7 @@ Wildcards enable Snakemake to identify different files in the workflow. In the c
 All of the Snakemake related files are found in the "workflow" directory.
 Snakemake can be configured to be run on a variety of platforms and be customized for ease.
 * **workflow/config/config.yaml**
-    This file configures the defaults of snakemake. This one is configured to submit jobs to Slurm through the sbatch command. The sbatch for, example, will save the output and error messages to a project level directory called slurmLogs. ==**Each user should update the email address on line 12 and uncomment it.**==
+    This file configures the defaults of snakemake. This one is configured to submit jobs to Slurm through the sbatch command. The sbatch for, example, will save the output and error messages to a project level directory called slurmLogs. ==**Each user should update the email address on line 14 and uncomment it.**==
 * **workflow\env\snk_mk_conda_env.yml**
     This file tells Conda how to build the conda environment that is needed for the jobs in this demo. This project uses a single conda environment, but you could set up different conda envs for different rules.
 * **workflow\Snakefile**

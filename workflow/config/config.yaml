@@ -9,9 +9,9 @@ cluster-generic-submit-cmd:
     --job-name=smk-{rule}-'{wildcards:q}'
     --output=slurmLogs/{rule}/'{wildcards:q}'-%x.%j.log
     --error=slurmLogs/{rule}/'{wildcards:q}'-%x.%j.log
-    --mail-user=aaron.yerke@usda.gov
     --mail-type=BEGIN,END,FAIL
     --parsable
+    # --mail-user=scinet.fellow@usda.gov #update your own email here.
     # --software-deployment-method conda
 default-resources:
   - partition=short
