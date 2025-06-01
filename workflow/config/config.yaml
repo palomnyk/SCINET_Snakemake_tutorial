@@ -14,7 +14,7 @@ cluster-generic-submit-cmd:
     # --mail-user=scinet.fellow@usda.gov #update your own email here.
     # --software-deployment-method conda
 default-resources:
-  - partition=short
+  - partition=ceres
   - mem_mb=1000
   - time=120 #num minutes
   - nodes=10
