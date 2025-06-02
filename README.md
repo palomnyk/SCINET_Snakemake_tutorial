@@ -9,7 +9,7 @@ The driver of action in Snakemake is the "rule". At minimum, a rule will have an
 This pipeline can best be described by summarizing the rules, in the order that their actions are triggered:
 ![rulegraph 1](workflow\reports\rulegraph.png "Flow of rules")
 * **rule create_test_rf_dataset**
-    This rule will download the "Cars" dataset using R. From that dataset, it will make a table of response variables that includes "mpg" as numeric values and "good_mileage" as a categorical variable. The predictor and response tables are saved to the data/unit_test directory.
+    This rule will download the "MTCars" dataset using R. From that dataset, it will make a table of response variables that includes "mpg" as numeric values and "good_mileage" as a categorical variable. The predictor and response tables are saved to the data/unit_test directory.
 * **rule rf_test_dataset:**
     Reads in the response columns one at a time to the random forest. The random forest makes a pdf graphic, saved to output/unit_test/graphics and and a table of the scikit learn scores (r squared for mgp and accuracy for good_milage) in output/unit_test/tables. 
 * **rule aggregate_rf_tables_test_data:**
@@ -36,7 +36,7 @@ First, load this repository to the desired location by either copy/pasting or na
 This will download the git repository.
 
 `module load miniconda`
-This loads the conda module into your enviroment. To install the conda environment for snakemake and the libraries for the pipeline, run:
+This loads the conda module into your envirTo install the conda environment for snakemake and the libraries for the pipelineoment. , run:
 
 `conda env create --file workflow/env/snk_mk_conda_env.yml`
 
