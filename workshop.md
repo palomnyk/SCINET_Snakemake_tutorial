@@ -19,7 +19,7 @@ time: 2 – 4 PM ET
 registration:
     url: TODO
 
-tags: bioinformatics, snakemake, conda, slurm, environemnts
+tags: bioinformatics, snakemake, conda, Slurm, environemnts
 
 prerequisites:
     - text: Access to the HPC cluster and the /90daydata directory.
@@ -44,7 +44,7 @@ subnav:
 
 # Overview
 Snakemake is a popular workflow management tool that can help [organize, document, scale, run, and reproduce](https://slides.com/johanneskoester/snakemake-tutorial "Snakemake slides") your workflows.
- Its workflows are described via a human readable, Python based language, but is language agnostic, and can be integrated into the SCINET HPC system via SLURM and CONDA.
+ Its workflows are described via a human readable, Python based language, but is language agnostic, and can be integrated into the SCINET HPC system via Slurm and CONDA.
 In this workshop, Aaron Yerke will introduce the basics of a Snakemake workflow and demonstrate how it runs on the cluster. After attending this workshop, you should be able to integrate Snakemake into your own projects on the SCINET HPC. This repository can also be found at https://github.com/palomnyk/SCINET_Snakemake_tutorial.git.
   <!--excerpt-->
 
@@ -90,6 +90,26 @@ mkdir -p /90daydata/shared/$USER/snakemake_ws
 cd /90daydata/shared/$USER/snakemake
 cp -r /project/scinet_workshop2/Bioinformatics_series/wk1_workshop/day1/ . #TODO Where to store it?
 ```
+
+* Load miniconda for access to conda environments.
+{:.copy-code}
+```bash
+module load miniconda
+```
+
+* Create the conda environment for Snakemake and the libraries for the pipeline.
+{:.copy-code}
+```bash
+conda env create --file workflow/env/snk_mk_conda_env.yml
+```
+`
+Load the conda environment that we just made.
+{:.copy-code}
+```bash
+source activate snk_mk_conda_env
+```
+
+We are now ready to run Snakemake. Stay tuned!
 -----  
 
 ## Tutorial Introduction
@@ -97,7 +117,7 @@ cp -r /project/scinet_workshop2/Bioinformatics_series/wk1_workshop/day1/ . #TODO
 
 The main driver of action in Snakemake is the "rule". At minimum, a rule will have an input, which are files that trigger Snakemake to run the rule. Most rules will also have an output too, which will allow Snakemake to make a chain of actions based on inputs and outputs. A rule can run a command in the commandline or it can run python. Variables that are passed from rule to rule are called wildcards. Wildcards are valueable tools for adding parallel processes to the the workflow. See more at: [Snakemake Logic](#snakemake-logic)
 
-Snakemake can be customized for various types of system infrastructure. In this tutorial, we will set up Snakemake to submit jobs to SLURM and have those jobs run in specific Conda environments. The details of how each job will run are going to be given in a config file (workflow/config/config.yaml) and in the Snakefile file, which directs Snakemake on how to run jobs.
+Snakemake can be customized for various types of system infrastructure. In this tutorial, we will set up Snakemake to submit jobs to Slurm and have those jobs run in specific Conda environments. The details of how each job will run are going to be given in a config file (workflow/config/config.yaml) and in the Snakefile file, which directs Snakemake on how to run jobs.
 
 In this sample project, we will download the famous MTCars dataset, organize it, create a predictive model, and organize the output of the model. This will demonstrate how to use Snakemake to process each column of a specific data table is run in parallel. In this tutorial we will use the command line to set up Snakemake and then use Snakemake to run an example pipeline that consists of R and Python scripts. 
     
@@ -135,7 +155,19 @@ These wildcards are the column names of data/unit_test/mtc_response.csv that we 
 
 ### Configuation
 
-The main file for configuring Snakemake to your system architecture is: 
+The main file for configuring Snakemake to your system architecture is workflow/config/config.yaml. This file has some features to note:
+
+{:.copy-code}
+```bash
+cat workflow/config/config.yaml
+```
+
+The first 14 lines instruct Snakemake to use the generic cluster executor plug-in to launch jobs with sbatch, which is the Slurm batching command. 
+* Line 5 runs before the executor to create a top level directory to store the Slurm log files in a directory called "slurmLogs".
+* Lines 10 and 11 tell Slurm to put slurm reports in a subfolder of `slurmLogs` named after the name of the rule. The name of the log file is the name of the rule, followed by wildcards and the Slurm job number.
+* Line 14 is commented out, it would tell Slurm where to send notification emails. To use this line, remove the "#" and add your email address where the placeholder address is.
+
+The next section (lines 15-20) holds the default parameters. They are currently set for small jobs. As you add Snakemake to your own pipelines you can update these to your own requirements.
 
 ### Additional rule components
 #### Conda
@@ -143,7 +175,7 @@ Snakemake can execute rules in specified conda environments. The environments sh
 
 `conda:"env/snk_mk_conda_env.yml",`
 
-In this specific project only one conda environment is used, but as many as needed can be used. Snakemake expects the Conda environment YAML to be found in the workflow/env folder.
+In this specific project only one conda environment is used, but as many as needed can be used. Snakemake expects the Conda environment YAML to be found in the workflow/env folder. In order to execute jobs on the cluster, the envrioment that you run snakemake from requires the snakemake snakemake-executor-plugin-cluster-generic from line 16.
 
 {:.copy-code}
 ```bash
@@ -151,7 +183,7 @@ cat workflow/env/snk_mk_conda_env.yml
 ```
 
 #### Resources
-Default resources are allocated in workflow/config/config.yaml, but for a given rule, these resources can modified for individual rules with a resources block. In the example below, a custom runtime and memory allotment would be requested when this rule is submitted to SLURM.
+Default resources are allocated in workflow/config/config.yaml, but for a given rule, these resources can modified for individual rules with a resources block. In the example below, a custom runtime and memory allotment would be requested when this rule is submitted to Slurm.
 
 ```
 	resources:
@@ -159,9 +191,25 @@ Default resources are allocated in workflow/config/config.yaml, but for a given 
 		mem_mb="16gb"
 ```
 
-#### Run
-Finally, Instead of running commands with shell(), Snakemake can execute Python code with the run() command. For examples of this, see [Snakemake's plain python rules](https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#plain-python-rules "Snakemake's plain python rules")  
+## Run snakemake
+
+First, we need to do a dry run to see what jobs will run:
+{:.copy-code}
+```bash
+snakemake --profile workflow/config -n
+```
+This does not submit any jobs to the cluster. If the output looks acceptable, run it again without the "-n" tag.
+
+{:.copy-code}
+```bash
+snakemake --profile workflow/config
+```
+
+This will actually launch the jobs and if you have added your email to line 14 of the config file, you should recieve confirmation as well.
 
 
 ## Additional resources
+Snakemake has an extensive community of users that post their content, as well as several of their own tutorials and detailed documentation. In addition to those, here are some resources that I used to make this workshop:
+* https://github.com/jdblischak/smk-simple-slurm/blob/main/simple/config.v8%2B.yaml#L5
+* https://github.com/binder-project/example-conda-environment
 
