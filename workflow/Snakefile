@@ -9,7 +9,7 @@ from snakemake.utils import min_version
 ##### set minimum snakemake version #####
 min_version("8.9.0")
 
-# Create constants
+# List constants to use as wildcards
 response_cols = ["mpg","good_milage","car_name"]
 
 rule complete:
