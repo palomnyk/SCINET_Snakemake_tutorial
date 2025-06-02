@@ -34,12 +34,13 @@ materials:
 subnav:
   - title: Pre-Workshop Instructions
   - title: Tutorial Introduction
-  - title: File Formats
-    url: '#exploring-bioinformatics-file-formats'
-  - title: Public Databases
-    url: '#exploring-public-repositoriesdatabases'
-  - title: BLAST
-  - title: Sources
+  - title: Snakemake Introduction
+    url: '#snakemake-introduction'
+  - title: Snakemake logic
+    url: '#snakemake-logic'
+  - title: Run Snakemake
+    url: '#run-snakemake'
+  - title: Additional resources
 ---
 
 # Overview
@@ -112,7 +113,7 @@ source activate snk_mk_conda_env
 We are now ready to run Snakemake. Stay tuned!
 -----  
 
-## Tutorial Introduction
+## Snakemake Introduction
 [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html "Snakemake") is a python retooling of the old UNIX tool called "Make". It can be used to document and automatically run a pipeline and can help run jobs in parallel. 
 
 The main driver of action in Snakemake is the "rule". At minimum, a rule will have an input, which are files that trigger Snakemake to run the rule. Most rules will also have an output too, which will allow Snakemake to make a chain of actions based on inputs and outputs. A rule can run a command in the commandline or it can run python. Variables that are passed from rule to rule are called wildcards. Wildcards are valueable tools for adding parallel processes to the the workflow. See more at: [Snakemake Logic](#snakemake-logic)
