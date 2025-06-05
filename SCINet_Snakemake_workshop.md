@@ -47,29 +47,9 @@ subnav:
 Snakemake is a popular workflow management tool that can help [organize, document, scale, run, and reproduce](https://slides.com/johanneskoester/snakemake-tutorial "Snakemake slides") your workflows.
  Its workflows are described via a human readable, Python based language, but is language agnostic, and can be integrated into the SCINET HPC system via Slurm and CONDA.
 In this workshop, Aaron Yerke will introduce the basics of a Snakemake workflow and demonstrate how it runs on the cluster. After attending this workshop, you should be able to integrate Snakemake into your own projects on the SCINET HPC. This repository can also be found at https://github.com/palomnyk/SCINET_Snakemake_tutorial.git.
-  <!--excerpt-->
 
-## Pre-Workshop Instructions
 
-To help minimize technical issues and delays at the start of the workshop, please try the following prior to the workshop. 
-
-* **Logging on to [Ceres Open OnDemand (OOD)](http://ceres-ood.scinet.usda.gov/):** Please confirm you can successfully log in to Ceres OOD with your SCINet account [(see instructions here)]({{site.baseurl}}/guides/access/web-based-login). If you are successful, you will be able to see the Ceres OOD home page.
-* **Ceres Shell Access:** When on Ceres OOD, click on the top navigation bar: “Clusters” > “Ceres Shell Access”. A new tab will appear that looks like a shell terminal (e.g., like PowerShell). Please confirm you do not receive any error messages or requests to re-authenticate and that the final line looks like "[firstname.lastname@ceres ~]$” 
-* **VS Code Server:** Back on the main Ceres OOD tab, click on the top or side navigation bar: “Interactive Apps” > “VS Code Server”. 
-  * Fill the input fields with the following (input fields not listed below can be left at their default values):  
-    * Account: scinet_workshop2 #TODO
-    * Queue: ceres 
-    * QOS: 400thread 
-    * R Version: 4.4.1 
-    * Number of hours: 5 #TODO too much?
-    * Number of cores: 1 
-    * Memory required: 8GB 
-    * Optional Slurm Arguments: (leave empty) 
-  * Click the "Launch" button. 
-  * Wait a moment for the job card to update from "Queued" to "Running". 
-  * Please confirm that clicking on the “Connect to VS Code Server” button opens a new tab with the VS Code Server interface. 
-
-## Tutorial Setup Instructions 
+## Tutorial Setup Instructions
 
 Steps to prepare for the tutorial session: 
 
@@ -77,8 +57,8 @@ Steps to prepare for the tutorial session:
 * Open a command-line session by clicking on “Clusters” -> “Ceres Shell Access” on the top menu. This will open a new tab with a command-line session on Ceres' login node. 
 * Request resources on a compute node by running the following command.  
 
-    {:.copy-code}
-    ```bash
+{:.copy-code}
+```bash
 srun --reservation=wk1_workshop -A scinet_workshop2 -t 05:00:00 -n 1 --mem 8G --pty bash 
 ```
     {% include reservation-alert reservation="wk1_workshop" project="scinet_workshop2" %}#TODO check this
@@ -88,29 +68,14 @@ srun --reservation=wk1_workshop -A scinet_workshop2 -t 05:00:00 -n 1 --mem 8G --
 {:.copy-code}
 ```bash
 mkdir -p /90daydata/shared/$USER/snakemake_ws 
-cd /90daydata/shared/$USER/snakemake
-cp -r /project/scinet_workshop2/Bioinformatics_series/wk1_workshop/day1/ . #TODO Where to store it?
+cd /90daydata/shared/$USER/snakemake_ws
+cp -r /project/scinet_workshop1/snakemake .
+mkdir .conda
 ```
 
-* Load miniconda for access to conda environments.
-{:.copy-code}
-```bash
-module load miniconda
-```
+The final line of that command created a hidden folder that we will use to store a conda environment that we will use when we run snakemake.
 
-* Create the conda environment for Snakemake and the libraries for the pipeline.
-{:.copy-code}
-```bash
-conda env create --file workflow/env/snk_mk_conda_env.yml
-```
-`
-Load the conda environment that we just made.
-{:.copy-code}
-```bash
-source activate snk_mk_conda_env
-```
-
-We are now ready to run Snakemake. Stay tuned!
+We are now ready to setup and run Snakemake. Stay tuned!
 -----  
 
 ## Snakemake Introduction
@@ -122,7 +87,38 @@ Snakemake can be customized for various types of system infrastructure. In this 
 
 In this sample project, we will download the famous MTCars dataset, organize it, create a predictive model, and organize the output of the model. This will demonstrate how to use Snakemake to process each column of a specific data table is run in parallel. In this tutorial we will use the command line to set up Snakemake and then use Snakemake to run an example pipeline that consists of R and Python scripts. 
     
------
+We will go over the files in this project in the following sections. To see all of them:
+
+{:.copy-code}
+```bash
+tree
+```
+When you run that, you should see something like this:
+```
+├── data
+├── LICENSE
+├── output
+├── README.md
+├── SCINet_Snakemake_workshop.md
+├── slurmLogs
+└── workflow
+    ├── config
+    │   └── config.yaml
+    ├── env
+    │   └── snk_mk_conda_env.yml
+    ├── reports
+    │   ├── dag.png
+    │   └── rulegraph.png
+    ├── scripts
+    │   ├── data_org
+    │   │   ├── combine_2_csv.R
+    │   │   ├── combine_rf_data.R
+    │   │   └── make_rf_test_dfs.R
+    │   └── ml
+    │       └── random_forest.py
+    └── Snakefile
+```
+
 ## Snakemake logic
 
 The instructions to Snakemake for running the pipeline are typically found in /workflow/Snakemake. This file contains the rules that Snakemake is meant to follow as well as links to config files.
@@ -168,31 +164,58 @@ The first 14 lines instruct Snakemake to use the generic cluster executor plug-i
 * Lines 10 and 11 tell Slurm to put slurm reports in a subfolder of `slurmLogs` named after the name of the rule. The name of the log file is the name of the rule, followed by wildcards and the Slurm job number.
 * Line 14 is commented out, it would tell Slurm where to send notification emails. To use this line, remove the "#" and add your email address where the placeholder address is.
 
+To edit this document, you can open it with the vim editor.
+{:.copy-code}
+```bash
+vim workflow/config/config.yaml
+```
+After you uncomment the line of code, you can exit Vim by hitting "Esc" and then typing ":wq" and hitting "enter".
+
 The next section (lines 15-20) holds the default parameters. They are currently set for small jobs. As you add Snakemake to your own pipelines you can update these to your own requirements.
 
 ### Additional rule components
 #### Conda
-Snakemake can execute rules in specified conda environments. The environments should be specified in the optional "conda:" header. 
+Snakemake can execute rules in specified conda environments. The environments should be specified for each rule in the optional "conda:" header. 
 
 `conda:"env/snk_mk_conda_env.yml",`
 
-In this specific project only one conda environment is used, but as many as needed can be used. Snakemake expects the Conda environment YAML to be found in the workflow/env folder. In order to execute jobs on the cluster, the envrioment that you run snakemake from requires the snakemake snakemake-executor-plugin-cluster-generic from line 16.
+In this tuturial project only one conda environment is used, but as many as needed can be used. Snakemake expects the Conda environment YAML to be found in the workflow/env folder. In order to execute jobs on the cluster, the envrioment that you run snakemake from requires the snakemake snakemake-executor-plugin-cluster-generic from line 16.
 
 {:.copy-code}
 ```bash
 cat workflow/env/snk_mk_conda_env.yml
 ```
 
+This file holds the conda env that you loaded in [Tutorial Setup Instructions](#tutorial-Setup-Instructions). There are comments at the top and bottom of this file to help you install it when you need to set up your own projects.
+
 #### Resources
-Default resources are allocated in workflow/config/config.yaml, but for a given rule, these resources can modified for individual rules with a resources block. In the example below, a custom runtime and memory allotment would be requested when this rule is submitted to Slurm.
+Default resources are allocated in workflow/config/config.yaml, but for a given rule, these resources can modified for individual rules with a resources block. In the example below, a custom runtime and memory allotment would be requested when this rule is submitted to Slurm. This can be seen in rule rf_test_dataset from the Snakefile, for example. If this is not specified then the defaule resources are requested.
 
 ```
 	resources:
-		runtime=240, #format: M, M:S, H:M:S, D-H, D-H:M, or D-H:M:S
-		mem_mb="16gb"
+		runtime=10, #format: M, M:S, H:M:S, D-H, D-H:M, or D-H:M:S
+		mem_mb="8gb"
 ```
 
 ## Run snakemake
+
+### Set up environment
+* Load miniconda for access to conda environments.
+{:.copy-code}
+```bash
+module load miniconda
+```
+
+* Create the conda environment for Snakemake and the libraries for the pipeline. This env will be available as long the conda files in the .conda dir are available. 
+{:.copy-code}
+```bash
+conda env create --file workflow/env/snk_mk_conda_env.yml --prefix ./.conda
+```
+`
+Load the conda environment that we just made.
+{:.copy-code}
+```bash
+source activate snk_mk_conda_env /90daydata/shared/$USER/snakemake_ws/.conda
 
 First, we need to do a dry run to see what jobs will run:
 {:.copy-code}
@@ -208,6 +231,21 @@ snakemake --profile workflow/config
 
 This will actually launch the jobs and if you have added your email to line 14 of the config file, you should recieve confirmation as well.
 
+After all of your Slurm jobs have completed, you should see that files have been downloaded into the data folder and output has been generated in the output folder.
+
+{:.copy-code}
+```
+tree
+```
+
+Now you can run Snakemake and integrate it into your own workflows. Give it a try!
+
+## Other useful commands
+Snakemake can make diagrams of your workflow, as seen in the two images above. 
+* `snakemake --rulegraph |dot -Tpng > workflow/reports/rulegraph.png`
+    Used to make first graphic that shows order of rule execution.
+* `snakemake --dag |dot -Tpng > workflow/reports/dag.png`
+    Used to make the 2nd graphic that show a more detailed graphic.
 
 ## Additional resources
 Snakemake has an extensive community of users that post their content, as well as several of their own tutorials and detailed documentation. In addition to those, here are some resources that I used to make this workshop:
