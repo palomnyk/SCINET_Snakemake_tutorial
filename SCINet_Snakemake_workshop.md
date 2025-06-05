@@ -19,13 +19,12 @@ time: 2 – 4 PM ET
 registration:
     url: TODO
 
-tags: bioinformatics, snakemake, conda, Slurm, environemnts
+tags: bioinformatics, snakemake, conda, Slurm, environemnts, workflow, pipeline, automation
 
 prerequisites:
     - text: Access to the HPC cluster and the /90daydata directory.
     - text: Familiarity with basic tools and navigation on the cluster.
     - text: Familiarity with the concepts of job submission and execution environments.
-
 
 materials:
   - text: Workshop recording
@@ -44,10 +43,13 @@ subnav:
 ---
 
 # Overview
+![Snakemake icon](workflow/resources/snakemake_icon.png "Snakemake")
+
 Snakemake is a popular workflow management tool that can help [organize, document, scale, run, and reproduce](https://slides.com/johanneskoester/snakemake-tutorial "Snakemake slides") your workflows.
  Its workflows are described via a human readable, Python based language, but is language agnostic, and can be integrated into the SCINET HPC system via Slurm and CONDA.
 In this workshop, Aaron Yerke will introduce the basics of a Snakemake workflow and demonstrate how it runs on the cluster. After attending this workshop, you should be able to integrate Snakemake into your own projects on the SCINET HPC. This repository can also be found at https://github.com/palomnyk/SCINET_Snakemake_tutorial.git.
 
+Note that this tutorial is for Snakemake __versions 8+__, as version 8 introduced breaking changes to previous versions.
 
 ## Tutorial Setup Instructions
 
@@ -95,12 +97,12 @@ tree
 ```
 When you run that, you should see something like this:
 ```
+.
 ├── data
 ├── LICENSE
 ├── output
 ├── README.md
 ├── SCINet_Snakemake_workshop.md
-├── slurmLogs
 └── workflow
     ├── config
     │   └── config.yaml
@@ -109,6 +111,8 @@ When you run that, you should see something like this:
     ├── reports
     │   ├── dag.png
     │   └── rulegraph.png
+    ├── resources
+    │   └── snakemake_icon.png
     ├── scripts
     │   ├── data_org
     │   │   ├── combine_2_csv.R
