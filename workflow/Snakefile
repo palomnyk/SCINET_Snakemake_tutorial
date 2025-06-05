@@ -43,6 +43,9 @@ rule rf_test_dataset:
 		resp = "data/unit_test/mtc_response.csv"
 	output:
 		"output/unit_test/tables/1col{respns_column}?rf_test_scores.csv"
+	resources:
+		runtime=10, #format: M, M:S, H:M:S, D-H, D-H:M, or D-H:M:S
+		mem_mb="8gb"
 	shell:
 		"""
 		python workflow/scripts/ml/random_forest.py \
