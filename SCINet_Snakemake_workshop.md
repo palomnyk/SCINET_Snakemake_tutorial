@@ -72,10 +72,7 @@ srun --reservation=wk1_workshop -A scinet_workshop2 -t 05:00:00 -n 1 --mem 8G --
 mkdir -p /90daydata/shared/$USER/snakemake_ws 
 cd /90daydata/shared/$USER/snakemake_ws
 cp -r /project/scinet_workshop1/snakemake/* .
-mkdir .conda
 ```
-
-The final line of that command created a hidden folder that we will use to store a conda environment that we will use when we run snakemake.
 
 We are now ready to setup and run Snakemake. Stay tuned!
 -----  
@@ -208,10 +205,10 @@ Default resources are allocated in workflow/config/config.yaml, but for a given 
 module load miniconda
 ```
 
-* Load the conda environment for Snakemake and the libraries for the pipeline. This env will be available as long the conda files in the .conda dir are available. This env and instructions for creating it can be found at workflow/env/snk_mk_conda_env.yml. 
+* Load the conda environment for Snakemake and the libraries for the pipeline. This env will be available as long the files from the completed env in workflow/env dir are available. The YAML to build this environment and instructions for creating it can be found at workflow/env/snk_mk_conda_env.yml. 
 {:.copy-code}
 ```bash
-source activate snk_mk_conda_env /90daydata/shared/$USER/snakemake_ws/.conda
+source activate snk_mk_conda_env /90daydata/shared/$USER/snakemake_ws/workflow/env
 ```
 
 First, we need to do a dry run to see what jobs will run:
