@@ -1,20 +1,14 @@
 # Author: Aaron Yerke (aaronyerke@gmail.com)
-
 configfile: "workflow/config/config.yaml"
 
-import os
-import pandas as pd
 from snakemake.utils import min_version
-
-##### set minimum snakemake version #####
 min_version("8.9.0")
 
 # List constants to use as wildcards
 response_cols = ["mpg","good_milage","car_name"]
 
-rule complete:
-	input:
-		"output/unit_test/tables/rf_test_scores.csv"
+rule all:
+	input:"output/unit_test/tables/rf_test_scores.csv"
 
 rule create_test_rf_dataset:
 	conda:"env/snk_mk_conda_env.yml",

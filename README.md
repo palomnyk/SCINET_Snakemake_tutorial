@@ -14,7 +14,7 @@ This pipeline can best be described by summarizing the rules, in the order that 
     Reads in the response columns one at a time to the random forest. The random forest makes a pdf graphic, saved to output/unit_test/graphics and and a table of the scikit learn scores (r squared for mgp and accuracy for good_milage) in output/unit_test/tables. 
 * **rule aggregate_rf_tables_test_data:**
     This rule tells Snakemake to look for the later output and then aggregates all the scores into a single file.
-* **rule Complete**
+* **rule all**
     This is the final rule that only has input. It is used to call all the other rules. If you have multiple chains of rules, the end product will go here. Note that there is a convention to name this rule "all".
 ### Wildcards
 ![directed acyclic graph](workflow/reports/dag.png "Rules with wildcards")
@@ -162,7 +162,7 @@ localrule aggregate_rf_tables_test_data:
 Execute 1 jobs...
 
 [Mon Mar 31 15:59:18 2025]
-localrule complete:
+localrule all:
     input: output/unit_test/tables/rf_test_scores.csv
     jobid: 0
     reason: Input files updated by another job: output/unit_test/tables/rf_test_scores.csv

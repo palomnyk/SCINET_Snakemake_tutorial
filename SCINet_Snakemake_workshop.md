@@ -71,7 +71,7 @@ srun --reservation=wk1_workshop -A scinet_workshop2 -t 05:00:00 -n 1 --mem 8G --
 ```bash
 mkdir -p /90daydata/shared/$USER/snakemake_ws 
 cd /90daydata/shared/$USER/snakemake_ws
-cp -r /project/scinet_workshop1/snakemake .
+cp -r /project/scinet_workshop1/snakemake/* .
 mkdir .conda
 ```
 
@@ -98,12 +98,11 @@ tree
 When you run that, you should see something like this:
 ```
 .
-├── data
 ├── LICENSE
-├── output
 ├── README.md
 ├── SCINet_Snakemake_workshop.md
 └── workflow
+    ├── Snakefile
     ├── config
     │   └── config.yaml
     ├── env
@@ -113,14 +112,13 @@ When you run that, you should see something like this:
     │   └── rulegraph.png
     ├── resources
     │   └── snakemake_icon.png
-    ├── scripts
-    │   ├── data_org
-    │   │   ├── combine_2_csv.R
-    │   │   ├── combine_rf_data.R
-    │   │   └── make_rf_test_dfs.R
-    │   └── ml
-    │       └── random_forest.py
-    └── Snakefile
+    └── scripts
+        ├── data_org
+        │   ├── combine_2_csv.R
+        │   ├── combine_rf_data.R
+        │   └── make_rf_test_dfs.R
+        └── ml
+            └── random_forest.py
 ```
 
 ## Snakemake logic
@@ -144,9 +142,10 @@ This pipeline can best be described by summarizing the rules, in the order that 
 * **rule rf_test_dataset:**
     Reads in the response columns one at a time to the random forest. The random forest makes a pdf graphic, saved to output/unit_test/graphics and and a table of the scikit learn scores (r squared for mgp and accuracy for good_milage) in output/unit_test/tables. 
 * **rule aggregate_rf_tables_test_data:**
-    This rule tells Snakemake to look for the later output and then aggregates all the scores into a single file.
-* **rule Complete**
-    This is the final rule that only has input. It is used to call all the other rules. If you have multiple chains of rules, the end product will go here. Note that there is a convention to name this rule "all".
+    This rule tells Snakemake to look for the later output and then aggregates all the scores into a single file. This rule makes use of the expand() helper function, see https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#helpers-for-defining-rules to see all the helper functions.
+    In this case, expand() creates a list of file paths for each of the *response_cols* wildcards, see [Our wildcards](#our-wildcards) for a bit more about wildcards.
+* **rule all**
+    This is the final rule that only has input. It a catch-all rule that holds the final output of all other rule chains. If you have multiple chains of rules, the end product of each chain will go here. Note that there is a convention to name this rule "all", though it is not required by Snakemake.
 
 ### Our wildcards
 Wildcards enable Snakemake to identify and keep track of different files in the workflow. Our wildcards are defined on line 13 of the Snakefile as 
@@ -189,7 +188,6 @@ In this tuturial project only one conda environment is used, but as many as need
 ```bash
 cat workflow/env/snk_mk_conda_env.yml
 ```
-
 This file holds the conda env that you loaded in [Tutorial Setup Instructions](#tutorial-Setup-Instructions). There are comments at the top and bottom of this file to help you install it when you need to set up your own projects.
 
 #### Resources
@@ -210,16 +208,11 @@ Default resources are allocated in workflow/config/config.yaml, but for a given 
 module load miniconda
 ```
 
-* Create the conda environment for Snakemake and the libraries for the pipeline. This env will be available as long the conda files in the .conda dir are available. 
-{:.copy-code}
-```bash
-conda env create --file workflow/env/snk_mk_conda_env.yml --prefix ./.conda
-```
-`
-Load the conda environment that we just made.
+* Load the conda environment for Snakemake and the libraries for the pipeline. This env will be available as long the conda files in the .conda dir are available. This env and instructions for creating it can be found at workflow/env/snk_mk_conda_env.yml. 
 {:.copy-code}
 ```bash
 source activate snk_mk_conda_env /90daydata/shared/$USER/snakemake_ws/.conda
+```
 
 First, we need to do a dry run to see what jobs will run:
 {:.copy-code}
