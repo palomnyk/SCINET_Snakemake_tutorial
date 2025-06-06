@@ -196,7 +196,11 @@ This should give similar output, but with job id numbers.
     Used to make first graphic that shows order of rule execution.
 * `snakemake --dag |dot -Tpng > workflow/reports/dag.png`
     Used to make the 2nd graphic that show a more detailed graphic.
+### Tuturial setup
+* git clone https://github.com/palomnyk/SCINET_Snakemake_tutorial
+* conda env create --file workflow/env/snk_mk_conda_env.yml -p ./.conda
 
 ## Other useful resources
 * https://github.com/jdblischak/smk-simple-slurm/blob/main/simple/config.v8%2B.yaml#L5
 * https://github.com/binder-project/example-conda-environment
+
