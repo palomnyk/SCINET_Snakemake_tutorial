@@ -61,9 +61,9 @@ Steps to prepare for the tutorial session:
 
 {:.copy-code}
 ```bash
-srun --reservation=wk1_workshop -A scinet_workshop2 -t 05:00:00 -n 1 --mem 8G --pty bash 
+srun --reservation=wk1_workshop -A scinet_workshop2 -t 02:00:00 -n 1 --mem 8G --pty bash 
 ```
-    {% include reservation-alert reservation="wk1_workshop" project="scinet_workshop2" %}#TODO check this
+{% include reservation-alert reservation="wk1_workshop" project="scinet_workshop2" %}#TODO check this
 
 * Create a workshop working directory by running the following commands. Note: you do not have to edit the commands with your username as it will be determined by the $USER variable.  
 
@@ -72,6 +72,7 @@ srun --reservation=wk1_workshop -A scinet_workshop2 -t 05:00:00 -n 1 --mem 8G --
 mkdir -p /90daydata/shared/$USER/snakemake_ws 
 cd /90daydata/shared/$USER/snakemake_ws
 cp -r /project/scinet_workshop1/snakemake/* .
+cd SCINET_Snakemake_tutorial
 ```
 
 We are now ready to setup and run Snakemake. Stay tuned!
@@ -208,7 +209,7 @@ module load miniconda
 * Load the conda environment for Snakemake and the libraries for the pipeline. This env will be available as long the files from the completed env in workflow/env dir are available. The YAML to build this environment and instructions for creating it can be found at workflow/env/snk_mk_conda_env.yml. 
 {:.copy-code}
 ```bash
-source activate snk_mk_conda_env /90daydata/shared/$USER/snakemake_ws/workflow/env
+source activate snk_mk_conda_env /90daydata/shared/$USER/snakemake_ws/.conda
 ```
 
 First, we need to do a dry run to see what jobs will run:
