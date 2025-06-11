@@ -11,7 +11,7 @@ This pipeline can best be described by summarizing the rules, in the order that 
 * **rule create_test_rf_dataset**
     This rule will download the "MTCars" dataset using R. From that dataset, it will make a table of response variables that includes "mpg" as numeric values and "good_mileage" as a categorical variable. The predictor and response tables are saved to the data/unit_test directory.
 * **rule rf_test_dataset:**
-    Reads in the response columns one at a time to the random forest. The random forest makes a pdf graphic, saved to output/unit_test/graphics and and a table of the scikit learn scores (r squared for mgp and accuracy for good_milage) in output/unit_test/tables. 
+    Reads in the response columns one at a time to the random forest. The random forest makes a pdf graphic, saved to output/unit_test/graphics and and a table of the scikit learn scores (r squared for mgp and accuracy for good_mileage) in output/unit_test/tables. 
 * **rule aggregate_rf_tables_test_data:**
     This rule tells Snakemake to look for the later output and then aggregates all the scores into a single file.
 * **rule all**
@@ -19,7 +19,7 @@ This pipeline can best be described by summarizing the rules, in the order that 
 ### Wildcards
 ![directed acyclic graph](workflow/reports/dag.png "Rules with wildcards")
 Wildcards enable Snakemake to identify different files in the workflow. In the case of this pipeline, line 13 tells Snakemake what the different columns that we need to look for are:
-`response_cols = ["mpg","good_milage","car_name"]`
+`response_cols = ["mpg","good_mileage","car_name"]`
 
 ## Description of files
 All of the Snakemake related files are found in the "workflow" directory.
@@ -123,14 +123,14 @@ localrule rf_test_dataset:
 [Mon Mar 31 15:59:18 2025]
 localrule rf_test_dataset:
     input: data/unit_test/mtc_predictor.csv, data/unit_test/mtc_response.csv
-    output: output/unit_test/tables/1colgood_milage?rf_test_scores.csv
+    output: output/unit_test/tables/1colgood_mileage?rf_test_scores.csv
     jobid: 4
-    reason: Missing output files: output/unit_test/tables/1colgood_milage?rf_test_scores.csv; Input files updated by another job: data/unit_test/mtc_response.csv, data/unit_test/mtc_predictor.csv
-    wildcards: respns_column=good_milage
+    reason: Missing output files: output/unit_test/tables/1colgood_mileage?rf_test_scores.csv; Input files updated by another job: data/unit_test/mtc_response.csv, data/unit_test/mtc_predictor.csv
+    wildcards: respns_column=good_mileage
     resources: mem_mb=1000, mem_mib=954, disk_mb=<TBD>, tmpdir=<TBD>, partition=<TBD>, time=120, nodes=10, ntasks=5
 
 
-                python workflow/scripts/ml/random_forest.py                             --response_fn data/unit_test/mtc_response.csv                           --delimeter ,                           --pred_path data/unit_test/mtc_predictor.csv                            --out_folder unit_test                 --output_label rf_test                           --title rf_test                                 --response_col good_milage
+                python workflow/scripts/ml/random_forest.py                             --response_fn data/unit_test/mtc_response.csv                           --delimeter ,                           --pred_path data/unit_test/mtc_predictor.csv                            --out_folder unit_test                 --output_label rf_test                           --title rf_test                                 --response_col good_mileage
 
 
 [Mon Mar 31 15:59:18 2025]
@@ -149,14 +149,14 @@ Execute 1 jobs...
 
 [Mon Mar 31 15:59:18 2025]
 localrule aggregate_rf_tables_test_data:
-    input: output/unit_test/tables/1colmpg?rf_test_scores.csv, output/unit_test/tables/1colgood_milage?rf_test_scores.csv, output/unit_test/tables/1colcar_name?rf_test_scores.csv
+    input: output/unit_test/tables/1colmpg?rf_test_scores.csv, output/unit_test/tables/1colgood_mileage?rf_test_scores.csv, output/unit_test/tables/1colcar_name?rf_test_scores.csv
     output: output/unit_test/tables/rf_test_scores.csv
     jobid: 1
-    reason: Missing output files: output/unit_test/tables/rf_test_scores.csv; Input files updated by another job: output/unit_test/tables/1colmpg?rf_test_scores.csv, output/unit_test/tables/1colcar_name?rf_test_scores.csv, output/unit_test/tables/1colgood_milage?rf_test_scores.csv
+    reason: Missing output files: output/unit_test/tables/rf_test_scores.csv; Input files updated by another job: output/unit_test/tables/1colmpg?rf_test_scores.csv, output/unit_test/tables/1colcar_name?rf_test_scores.csv, output/unit_test/tables/1colgood_mileage?rf_test_scores.csv
     resources: mem_mb=1000, mem_mib=954, disk_mb=<TBD>, tmpdir=<TBD>, partition=<TBD>, time=120, nodes=10, ntasks=5
 
 
-                echo "output/unit_test/tables/1colmpg?rf_test_scores.csv output/unit_test/tables/1colgood_milage?rf_test_scores.csv output/unit_test/tables/1colcar_name?rf_test_scores.csv"
+                echo "output/unit_test/tables/1colmpg?rf_test_scores.csv output/unit_test/tables/1colgood_mileage?rf_test_scores.csv output/unit_test/tables/1colcar_name?rf_test_scores.csv"
                 Rscript workflow/scripts/data_org/combine_rf_data.R --out_subdir unit_test --fn_root rf_test
 
 Execute 1 jobs...

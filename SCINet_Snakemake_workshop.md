@@ -138,7 +138,7 @@ This pipeline can best be described by summarizing the rules, in the order that 
 * **rule create_test_rf_dataset**
     This rule will download the "Cars" dataset using R. From that dataset, it will make a table of response variables that includes "mpg" as numeric values and "good_mileage" as a categorical variable. The predictor and response tables are saved to the data/unit_test directory.
 * **rule rf_test_dataset:**
-    Reads in the response columns one at a time to the random forest. The random forest makes a pdf graphic, saved to output/unit_test/graphics and and a table of the scikit learn scores (r squared for mgp and accuracy for good_milage) in output/unit_test/tables. 
+    Reads in the response columns one at a time to the random forest. The random forest makes a pdf graphic, saved to output/unit_test/graphics and and a table of the scikit learn scores (r squared for mgp and accuracy for good_mileage) in output/unit_test/tables. 
 * **rule aggregate_rf_tables_test_data:**
     This rule tells Snakemake to look for the later output and then aggregates all the scores into a single file. This rule makes use of the expand() helper function, see https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#helpers-for-defining-rules to see all the helper functions.
     In this case, expand() creates a list of file paths for each of the *response_cols* wildcards, see [Our wildcards](#our-wildcards) for a bit more about wildcards.
@@ -147,7 +147,7 @@ This pipeline can best be described by summarizing the rules, in the order that 
 
 ### Our wildcards
 Wildcards enable Snakemake to identify and keep track of different files in the workflow. Our wildcards are defined on line 13 of the Snakefile as 
-`response_cols = ["mpg","good_milage","car_name"]`
+`response_cols = ["mpg","good_mileage","car_name"]`
 These wildcards are the column names of data/unit_test/mtc_response.csv that we download in **rule create_test_rf_dataset**. You will notice that intermediate files for this workflow use those wildcards in the filenames.
 ![directed acyclic graph](workflow/reports/dag.png "Rules with wildcards")
 
