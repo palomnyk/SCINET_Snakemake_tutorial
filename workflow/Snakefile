@@ -11,8 +11,8 @@ rule all:
 	input:"output/unit_test/tables/rf_test_scores.csv"
 
 rule create_test_rf_dataset:
-	conda:"/project/scinet_workshop1/snakemake/snakemake_env" #Note, this is a prebuilt environment for the SCINet tutorial, for running outside of the tutorial, comment/delete this line and and uncomment the following line.
-	# conda:"env/snk_mk_conda_env.yml",
+	# conda:"/project/scinet_workshop1/snakemake/snakemake_conda" #Note, this is a prebuilt environment for the SCINet tutorial, for running outside of the tutorial, comment/delete this line and and uncomment the following line.
+	conda:"env/snk_mk_conda_env.yml",
 	output:
 		"data/unit_test/mtc_predictor.csv",
 		"data/unit_test/mtc_response.csv"
@@ -22,8 +22,8 @@ rule create_test_rf_dataset:
 		"""
 
 rule aggregate_rf_tables_test_data:
-	conda:"/project/scinet_workshop1/snakemake/snakemake_env" #Note, this is a prebuilt environment for the SCINet tutorial, for running outside of the tutorial, comment/delete this line and and uncomment the following line.
-	# conda:"env/snk_mk_conda_env.yml",
+	# conda:"/project/scinet_workshop1/snakemake/snakemake_conda" #Note, this is a prebuilt environment for the SCINet tutorial, for running outside of the tutorial, comment/delete this line and and uncomment the following line.
+	conda:"env/snk_mk_conda_env.yml",
 	input:expand("output/unit_test/tables/1col{respns_column}?rf_test_scores.csv", respns_column=response_cols)
 	output: "output/unit_test/tables/rf_test_scores.csv"
 	shell:
@@ -33,8 +33,8 @@ rule aggregate_rf_tables_test_data:
 		"""
 
 rule rf_test_dataset:
-	conda:"/project/scinet_workshop1/snakemake/snakemake_env" #Note, this is a prebuilt environment for the SCINet tutorial, for running outside of the tutorial, comment/delete this line and and uncomment the following line.
-	# conda:"env/snk_mk_conda_env.yml",
+	# conda:"/project/scinet_workshop1/snakemake/snakemake_conda" #Note, this is a prebuilt environment for the SCINet tutorial, for running outside of the tutorial, comment/delete this line and and uncomment the following line.
+	conda:"env/snk_mk_conda_env.yml",
 	input:
 		pred = "data/unit_test/mtc_predictor.csv",
 		resp = "data/unit_test/mtc_response.csv"
