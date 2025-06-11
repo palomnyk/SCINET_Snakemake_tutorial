@@ -235,7 +235,7 @@ Default resources are allocated in workflow/config/config.yaml, but for a given 
   
   {:.copy-code}
   ```bash
-  source activate /project/scinet_workshop1/snakemake/.conda
+  source activate /project/scinet_workshop1/snakemake/snakemake_env
   ```
 
 First, we need to do a dry run to see what jobs will run:
