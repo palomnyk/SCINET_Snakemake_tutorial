@@ -5,7 +5,7 @@ from snakemake.utils import min_version
 min_version("8.9.0")
 
 # List constants to use as wildcards
-response_cols = ["mpg","good_milage","car_name"]
+response_cols = ["mpg","good_mileage","car_name"]
 
 rule all:
 	input:"output/unit_test/tables/rf_test_scores.csv"
